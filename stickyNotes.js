@@ -5,18 +5,12 @@ function init() {
   button.onclick = getSticky; // Assign click event of button to getSticky function
   
   // Here we use Array to write data to the localStorage
-  var stickies = localStorage["stickies"]; // First we set a variable to be equal to the stickies array object in localStorage
-  if (!stickies) { // Here we check if it exists, if it doesn't we set it equal to an empty array
-    stickies = [];
-    localStorage.setItem('stickies', JSON.stringify(stickies));
-  } else {
-    stickies = JSON.parse(stickies);
-  }
+  var stickies = getStickiesList(); // First we set a variable to be equal to the stickies array object in localStorage
   
   for (var i = 0; i < stickies.length; i += 1) { // Now we iterate through the stickies array
     var key = stickies[i];
     var value = localStorage[key];
-    addStickyToDOM(value);
+    addStickyNoteToDOM(value);
   }
   
   // // We initially used this JSON function to add to the localStorage object
@@ -65,9 +59,36 @@ function addStickyNoteToDOM(userInput) {
   console.log(userInput, "<-userInput");
 }
 
+// // This getSticky function works with the object style. Below we write for array
+// function getSticky() {
+//   var key = "sticky_" + localStorage.length; // Not excellent way to manage keys as the # could grow disproportionatly with localStorage.length
+//   var value = document.getElementById('noteToAdd').value;
+//   localStorage.setItem(key, value);
+//   addStickyNoteToDOM(value);
+// }
+
 function getSticky() {
-  var key = "sticky_" + localStorage.length; // Not excellent way to manage keys as the # could grow disproportionatly with localStorage.length
-  var value = document.getElementById('noteToAdd').value;
+  // In order to get a unique key, we make it equal to the current time in ms since 1970
+  var stickies = getStickiesList();
+  var currentDate = new Date();
+  var time = currentDate.getTime();
+  var key = "sticky_" + time;
+  var value = document.getElementById("noteToAdd").value;
+  
   localStorage.setItem(key, value);
+  stickies.push(key);
+  localStorage.setItem("stickies", JSON.stringify(stickies));
   addStickyNoteToDOM(value);
+}
+
+function getStickiesList() {
+  var stickies = localStorage.getItem("stickies");
+  if (!stickies) {
+    stickies = [];
+    localStorage.setItem("stickies", JSON.stringify(stickies));
+  } else {
+    stickies = JSON.parse(stickies);
+  }
+  
+  return stickies;
 }

@@ -1,6 +1,9 @@
 window.onload = init;
 
 function init() {
+  var button = document.getElementById("submitButton"); // Set variable to button
+  button.onclick = getSticky; // Assign click event of button to getSticky function
+  
   for (var i = 0; i < localStorage.length; i += 1) {
     var key = localStorage.key(i);
     // We check to ensure substring starts with "sticky" so we don't display
@@ -43,4 +46,11 @@ function addStickyNoteToDOM(userInput) {
   listItemStyle.innerHTML = userInput; // Adds the values from the user's localStorage array that starts with 'sticky' to the inner HTML of an element
   listItem.appendChild(listItemStyle); // Adds the contents of the <span>/listItemStyle to the <li>/listItem
   noteList.appendChild(listItem); // Adds the contents of the <li>/listItem to the <ul>/noteList
+}
+
+function getSticky() {
+  var key = "sticky_" + localStorage.length; // Not excellent way to manage keys as the # could grow disproportionatly with localStorage.length
+  var value = document.getElementById('noteToAdd').value;
+  localStorage.setItem(key, value);
+  addStickyNoteToDOM(value);
 }

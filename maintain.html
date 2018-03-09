@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Maintain Sticky Notes</title>
+  <script>
+    window.onload = function() {
+      var clearButton = document.getElementById("clearLocalStorage");
+      clearButton.onclick = localStorage.clear();
+    }
+  </script>
+</head>
+<body>
+  <form>
+    <input type="button" id="clearLocalStorage" value="Clear Data"></input>
+  </form>
+</body>
+</html>

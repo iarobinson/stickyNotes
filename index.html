@@ -6,8 +6,6 @@
   <link rel="stylesheet" href="stickyNotes.css">
   <script src="stickyNotes.js"></script>
   <script>
-    localStorage.setItem("sticky_0", "Pick up dry cleaning");
-    localStorage.setItem("sticky_1", "Cancel cable tv, who watches TV?");
   </script>
 </head>
 
@@ -15,6 +13,7 @@
   <form>
     <input type="text" value="" id="noteToAdd"></input>
     <input type="button" id="submitButton" value="Add Note">
+    <input type="button" onclick="location.href='maintain.html';" value="Clear all Stickes?" />
   </form>
   
   <h2>Your Notes</h2>

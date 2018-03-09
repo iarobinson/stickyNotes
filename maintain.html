@@ -4,15 +4,22 @@
   <meta charset="utf-8">
   <title>Maintain Sticky Notes</title>
   <script>
+    // This is very foolish for large apps because it indiscriminatly destroys
+    //  all data that is saved in your browser's local storage for this specific site/app
     window.onload = function() {
       var clearButton = document.getElementById("clearLocalStorage");
-      clearButton.onclick = localStorage.clear();
+      clearButton.onclick = clearStorage;
+    }
+    
+    function clearStorage() {
+      localStorage.clear();
     }
   </script>
 </head>
 <body>
   <form>
     <input type="button" id="clearLocalStorage" value="Clear Data"></input>
+    <input type="button" onclick="location.href='index.html';" value="Back to Stickies" />
   </form>
 </body>
 </html>

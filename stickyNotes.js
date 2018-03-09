@@ -1,16 +1,16 @@
 window.onload = init;
+var stickies = getStickiesList(); // First we set a variable to be equal to the stickies array object in localStorage
 
 function init() {
   var button = document.getElementById("submitButton"); // Set variable to button
   button.onclick = getSticky; // Assign click event of button to getSticky function
   
   // Here we use Array to write data to the localStorage
-  var stickies = getStickiesList(); // First we set a variable to be equal to the stickies array object in localStorage
   
   for (var i = 0; i < stickies.length; i += 1) { // Now we iterate through the stickies array
     var key = stickies[i];
     var value = localStorage[key];
-    addStickyNoteToDOM(value);
+    addStickyNoteToDOM(key, value);
   }
   
   // // We initially used this JSON function to add to the localStorage object
@@ -48,15 +48,16 @@ function init() {
 //   theList.appendChild(item);
 // }
 
-function addStickyNoteToDOM(userInput) {
+function addStickyNoteToDOM(key, userInput) {
   var noteList = document.getElementById("stickyNotes"); // Set variable to equal sticky note list
   var listItem = document.createElement("li"); // Set variable that creates a <li></li> element
+  listItem.setAttribute("id", key); // *This sets the key as the id attribute for each sticky note (for delete functionality)
   var listItemStyle = document.createElement("span"); // Set variable that creates a <span></span> element
   listItemStyle.setAttribute("class", "sticky"); // Set a variable that assings the class="sticky" to an element
   listItemStyle.innerHTML = userInput; // Adds the values from the user's localStorage array that starts with 'sticky' to the inner HTML of an element
   listItem.appendChild(listItemStyle); // Adds the contents of the <span>/listItemStyle to the <li>/listItem
   noteList.appendChild(listItem); // Adds the contents of the <li>/listItem to the <ul>/noteList
-  console.log(userInput, "<-userInput");
+  listItem.onclick = deleteSticky; // *This sets the key as the id attribute for each sticky note (for delete functionality)  
 }
 
 // // This getSticky function works with the object style. Below we write for array
@@ -69,7 +70,7 @@ function addStickyNoteToDOM(userInput) {
 
 function getSticky() {
   // In order to get a unique key, we make it equal to the current time in ms since 1970
-  var stickies = getStickiesList();
+  // var stickies = getStickiesList();
   var currentDate = new Date();
   var time = currentDate.getTime();
   var key = "sticky_" + time;
@@ -78,7 +79,7 @@ function getSticky() {
   localStorage.setItem(key, value);
   stickies.push(key);
   localStorage.setItem("stickies", JSON.stringify(stickies));
-  addStickyNoteToDOM(value);
+  addStickyNoteToDOM(key, value);
 }
 
 function getStickiesList() {
@@ -91,4 +92,29 @@ function getStickiesList() {
   }
   
   return stickies;
+}
+
+function deleteSticky(e) {
+  var key = e.target.id;
+  if (e.target.tagName.toLowerCase() == "span") {
+    key = e.target.parentNode.id;
+  }
+  
+  localStorage.removeItem(key);
+  var sticky = getStickiesList();
+  if (sticky) {
+    for (var i = 0; i < sticky.length; i += 1) {
+      if (key == sticky[i]) {
+        sticky.splice(i, 1)
+      }
+    }
+    
+    localStorage.setItem("stickies", JSON.stringify(sticky));
+    removeStickyFromDOM(key);
+  }
+}
+
+function removeStickyFromDOM(k) {
+  var sticky = document.getElementById(k);
+  sticky.parentNode.removeChild(sticky);
 }

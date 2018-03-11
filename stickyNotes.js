@@ -1,20 +1,16 @@
 window.onload = init;
-var stickies = getStickiesList(); // First we set a variable to be equal to the stickies array object in localStorage
-
 function init() {
   var button = document.getElementById("submitButton"); // Set variable to button
   button.onclick = getSticky; // Assign click event of button to getSticky function
-  
-  // Here we use Array to write data to the localStorage
-  
-  for (var i = 0; i < stickies.length; i += 1) { // Now we iterate through the stickies array
+  var stickies = getStickiesList();
+
+    for (var i = 0; i < stickies.length; i += 1) { // Now we iterate through the stickies array
     var key = stickies[i];
-    var value = localStorage[key];
+    // console.log(stickies, "<- stickies", key, "<- key in interation function", stickies[key], "<- stickies[key]");
+    var value = JSON.parse(localStorage[key]); // Changed from localStorage[key] to JSON.parse(localStorage[key]) to adjust for the object value
+    // console.log(key, "<-key", notes, "<-notes");
     addStickyNoteToDOM(key, value);
   }
-  
-  var colorButton = document.getElementById("stickieColor");
-  // colorButton.onclick = 
   
   // // We initially used this JSON function to add to the localStorage object
   // for (var i = 0; i < localStorage.length; i += 1) {
@@ -51,13 +47,16 @@ function init() {
 //   theList.appendChild(item);
 // }
 
-function addStickyNoteToDOM(key, userInput) {
+function addStickyNoteToDOM(key, stickyObj) { // remove value and replace with stickyObj so we store color selection
   var noteList = document.getElementById("stickyNotes"); // Set variable to equal sticky note list
   var listItem = document.createElement("li"); // Set variable that creates a <li></li> element
   listItem.setAttribute("id", key); // *This sets the key as the id attribute for each sticky note (for delete functionality)
+  
+  listItem.style.backgroundColor = stickyObj.color; // Set's background color select to CSS style of sticky
+  
   var listItemStyle = document.createElement("span"); // Set variable that creates a <span></span> element
   listItemStyle.setAttribute("class", "sticky"); // Set a variable that assings the class="sticky" to an element
-  listItemStyle.innerHTML = userInput; // Adds the values from the user's localStorage array that starts with 'sticky' to the inner HTML of an element
+  listItemStyle.innerHTML = stickyObj.value; // Adds the values from the user's localStorage array that starts with 'sticky' to the inner HTML of an element
   listItem.appendChild(listItemStyle); // Adds the contents of the <span>/listItemStyle to the <li>/listItem
   noteList.appendChild(listItem); // Adds the contents of the <li>/listItem to the <ul>/noteList
   listItem.onclick = deleteSticky; // *This sets the key as the id attribute for each sticky note (for delete functionality)  
@@ -72,6 +71,7 @@ function addStickyNoteToDOM(key, userInput) {
 // }
 
 function getSticky() {
+  var stickies = getStickiesList();
   // In order to get a unique key, we make it equal to the current time in ms since 1970
   // var stickies = getStickiesList();
   var currentDate = new Date();
@@ -79,10 +79,22 @@ function getSticky() {
   var key = "sticky_" + time;
   var value = document.getElementById("noteToAdd").value;
   
-  localStorage.setItem(key, value);
+  // For color selection
+  var colorSelectObj = document.getElementById("noteColor"); // Set variable to color input form
+  // Below we find selected index, but I think it should just be cSo.value = color. Maybe I'll learn later why we go for index.
+  var index = colorSelectObj.selectedIndex; // Sets a variable equal to the index of selected color
+  var color = colorSelectObj[index].value; // This makes nosense. It works, but can easily be refacotred. This gets the color selected.
+  
+  // Now we create an object to be stored in localStorage instead of a single value
+  var stickyObj = {
+    "value": value,
+    "color": color
+  };
+  
+  localStorage.setItem(key, JSON.stringify(stickyObj)); // Assign key + obj to localStorage
   stickies.push(key);
   localStorage.setItem("stickies", JSON.stringify(stickies));
-  addStickyNoteToDOM(key, value);
+  addStickyNoteToDOM(key, stickyObj);
 }
 
 function getStickiesList() {
@@ -108,7 +120,7 @@ function deleteSticky(e) {
   if (sticky) {
     for (var i = 0; i < sticky.length; i += 1) {
       if (key == sticky[i]) {
-        sticky.splice(i, 1)
+        sticky.splice(i, 1);
       }
     }
     

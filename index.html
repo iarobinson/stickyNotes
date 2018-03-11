@@ -5,12 +5,18 @@
   <title>stickyNotes - A localStorage practice app</title>
   <link rel="stylesheet" href="stickyNotes.css">
   <script src="stickyNotes.js"></script>
-  <script>
-  </script>
 </head>
 
 <body>
   <form>
+    <label for="note_color">Color: </label>
+    <select id="note_color">
+      <option value="yellow">Yellow</option>
+      <option value="green">Green</option>
+      <option value="pink">Pink</option>
+      <option value="blue">Blue</option>
+    </select>
+    <label for="note_text">Text:</label>
     <input type="text" value="" id="noteToAdd"></input>
     <input type="button" id="submitButton" value="Add Note">
     <input type="button" onclick="location.href='maintain.html';" value="Clear all Stickes?" />

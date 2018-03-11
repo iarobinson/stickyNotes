@@ -13,6 +13,9 @@ function init() {
     addStickyNoteToDOM(key, value);
   }
   
+  var colorButton = document.getElementById("stickieColor");
+  // colorButton.onclick = 
+  
   // // We initially used this JSON function to add to the localStorage object
   // for (var i = 0; i < localStorage.length; i += 1) {
   //   var key = localStorage.key(i);
